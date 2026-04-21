@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Photography — KURO (李龙飞)</title>
+  <meta name="description" content="Photography by KURO (李龙飞) — landscapes and street photography from China." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">KURO · Longfei</a>
+      <div class="nav-links">
+        <a href="about.html" class="nav-link">About</a>
+        <a href="photography.html" class="nav-link">Photography</a>
+        <a href="guestbook.html" class="nav-link">Guestbook</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span></button>
+    </div>
+  </nav>
+  <div class="mobile-nav" id="mobileNav">
+    <a href="about.html" class="mobile-link">About</a>
+    <a href="photography.html" class="mobile-link">Photography</a>
+    <a href="guestbook.html" class="mobile-link">Guestbook</a>
+  </div>
+
+  <!-- Page header -->
+  <header class="photo-page-header">
+    <div class="container">
+      <div>
+        <span class="label">Photography</span>
+        <h1 class="section-heading" style="margin-bottom:0;">风光 · 街拍</h1>
+      </div>
+      <!-- Filter bar -->
+      <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" data-filter="all">ALL</button>
+        <button class="filter-btn" data-filter="nature">NATURE</button>
+        <button class="filter-btn" data-filter="animals">ANIMALS</button>
+        <button class="filter-btn" data-filter="people">PEOPLE</button>
+        <button class="filter-btn" data-filter="other">OTHER</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Editorial grid — populated by gallery.js -->
+  <main>
+    <div class="editorial-grid" id="editorialGrid"></div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© 2025 Longfei (KURO)</p>
+      <nav class="footer-nav">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+    <button class="lb-close" id="lbClose" aria-label="Close">×</button>
+    <button class="lb-prev"  id="lbPrev"  aria-label="Previous">‹</button>
+    <button class="lb-next"  id="lbNext"  aria-label="Next">›</button>
+    <div class="lb-stage">
+      <img src="" alt="" id="lbImg" />
+      <div class="lb-caption">
+        <span id="lbTitle"></span>
+        <span class="lb-loc" id="lbLoc"></span>
+      </div>
+    </div>
+  </div>
+  <div class="lb-overlay" id="lbOverlay"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="config.js"></script>
+  <script src="data/photos.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/gallery.js"></script>
+</body>
+</html>

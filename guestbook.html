@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guestbook — KURO (李龙飞)</title>
+  <meta name="description" content="访客留言板 — 留下你的足迹" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/guestbook.css" />
+</head>
+
+<body>
+
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">KURO · Longfei</a>
+      <div class="nav-links">
+        <a href="about.html" class="nav-link">About</a>
+        <a href="photography.html" class="nav-link">Photography</a>
+        <a href="guestbook.html" class="nav-link">Guestbook</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span></button>
+    </div>
+  </nav>
+  <div class="mobile-nav" id="mobileNav">
+    <a href="about.html" class="mobile-link">About</a>
+    <a href="photography.html" class="mobile-link">Photography</a>
+    <a href="guestbook.html" class="mobile-link">Guestbook</a>
+  </div>
+
+  <!-- Header -->
+  <header class="gb-header">
+    <div class="container">
+      <span class="label">Guestbook</span>
+      <h1 class="section-heading">留下你的足迹</h1>
+      <p class="section-sub">欢迎分享一张照片或留下只言片语。经审核后将展示于此。</p>
+    </div>
+  </header>
+
+  <!-- Approved submissions grid -->
+  <section class="section">
+    <div class="container">
+      <div id="gbGrid" class="gb-grid">
+        <p class="gb-empty" id="gbEmpty">加载中…</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Submit form -->
+  <section class="section section-gray" id="submit">
+    <div class="container">
+      <span class="label">Submit</span>
+      <h2 class="section-heading">投稿</h2>
+
+      <div id="submitResult" class="submit-result" hidden></div>
+
+      <form id="gbForm" class="gb-form" novalidate>
+        <div class="gb-form-row">
+          <div class="gb-field">
+            <label for="gbName">姓名 / 昵称 *</label>
+            <input id="gbName" type="text" placeholder="你叫什么" required maxlength="60" />
+          </div>
+          <div class="gb-field">
+            <label for="gbEmail">邮箱 * <span class="field-hint">（审核结果会通知你，不会公开）</span></label>
+            <input id="gbEmail" type="email" placeholder="your@email.com" required />
+          </div>
+        </div>
+        <div class="gb-field">
+          <label for="gbMsg">留言 *</label>
+          <textarea id="gbMsg" rows="4" placeholder="写点什么吧……" required maxlength="500"></textarea>
+          <span class="char-count" id="charCount">0 / 500</span>
+        </div>
+        <div class="gb-field">
+          <label>照片 <span class="field-hint">（可选，最大 5 MB）</span></label>
+          <div class="gb-drop" id="gbDrop">
+            <input type="file" id="gbFile" accept="image/*" hidden />
+            <div id="gbDropPrompt">拖拽图片或 <button type="button"
+                onclick="document.getElementById('gbFile').click()">选择文件</button></div>
+            <img id="gbPreview" hidden />
+            <button type="button" id="gbRemoveFile" class="remove-file" hidden>✕ 移除</button>
+          </div>
+          <p id="gbFileError" class="field-error" hidden></p>
+        </div>
+        <button type="submit" class="btn btn-black" id="gbSubmitBtn">提交投稿 →</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Private note (collapsible) -->
+  <section class="section">
+    <div class="container">
+      <details class="note-details">
+        <summary>✉ 给 KURO 留一张私密小纸条</summary>
+        <div class="note-inner">
+          <p class="note-desc">只有 KURO 能看到。</p>
+          <div id="noteResult" hidden class="submit-result"></div>
+          <form id="noteForm" novalidate>
+            <div class="gb-field">
+              <label for="noteName">称呼</label>
+              <input id="noteName" type="text" placeholder="你的名字或昵称" maxlength="60" />
+            </div>
+            <div class="gb-field">
+              <label for="noteText">内容 *</label>
+              <textarea id="noteText" rows="4" placeholder="想对 KURO 说的话…" required maxlength="1000"></textarea>
+            </div>
+            <button type="submit" class="btn btn-outline">发送小纸条</button>
+          </form>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© 2025 Longfei (KURO)</p>
+      <nav class="footer-nav">
+        <a href="index.html">Home</a>
+        <a href="photography.html">Photography</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/guestbook.js?v=2"></script>
+</body>
+
+</html>

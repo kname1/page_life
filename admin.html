@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — KURO</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/admin.css"/>
+</head>
+<body>
+  <!-- LOGIN OVERLAY -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-box">
+      <p class="login-label">KURO · ADMIN</p>
+      <h1 class="login-title">管理后台</h1>
+      <div id="loginError" class="login-error" hidden></div>
+      <input id="loginEmail" type="email" placeholder="管理员邮筱" autocomplete="email"/>
+      <input id="loginPassword" type="password" placeholder="管理员密码" autocomplete="current-password"/>
+      <button id="loginBtn" class="login-btn">进入 →</button>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL (hidden until logged in) -->
+  <div id="adminPanel" class="admin-panel" hidden>
+    <aside class="sidebar">
+      <div class="sidebar-brand">龙飞 · Admin</div>
+      <nav class="sidebar-nav">
+        <button class="side-btn active" data-tab="upload">📷 上传照片</button>
+        <button class="side-btn" data-tab="photos">🖼 照片库</button>
+        <button class="side-btn" data-tab="review">⏳ 审核投稿</button>
+        <button class="side-btn" data-tab="notes">✉ 小纸条</button>
+      </nav>
+      <button id="logoutBtn" class="logout-btn">退出登录</button>
+    </aside>
+
+    <main class="admin-main">
+      <!-- TAB: UPLOAD -->
+      <section id="tab-upload" class="tab-panel active">
+        <h2 class="tab-title">上传新照片</h2>
+        <div class="upload-area" id="dropZone">
+          <input type="file" id="fileInput" accept="image/*" hidden/>
+          <div id="dropPrompt">
+            <span>拖拽图片到此处，或</span>
+            <button onclick="document.getElementById('fileInput').click()">选择文件</button>
+          </div>
+          <img id="previewImg" hidden/>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label>中文标题 *</label><input id="u-title" type="text" placeholder="云海之间"/></div>
+          <div class="field"><label>英文标题</label><input id="u-titleEn" type="text" placeholder="Sea of Clouds"/></div>
+          <div class="field"><label>地点 *</label><input id="u-location" type="text" placeholder="黄山，安徽"/></div>
+          <div class="field"><label>日期 (YYYY-MM)</label><input id="u-date" type="text" placeholder="2024-03"/></div>
+          <div class="field full"><label>描述</label><textarea id="u-desc" rows="3" placeholder="这张照片背后的故事…"></textarea></div>
+          <div class="field"><label>分类</label>
+            <select id="u-cat">
+              <option value="nature">Nature 自然</option>
+              <option value="animals">Animals 动物</option>
+              <option value="people">People 人</option>
+              <option value="other">Other 其他</option>
+            </select>
+          </div>
+          <div class="field"><label>方向</label>
+            <select id="u-orient">
+              <option value="landscape">横向 Landscape</option>
+              <option value="portrait">竖向 Portrait</option>
+            </select>
+          </div>
+          <div class="field"><label>精选大图</label>
+            <label class="toggle"><input type="checkbox" id="u-featured"/><span>全宽展示</span></label>
+          </div>
+          <div class="field"><label>访客可见</label>
+            <label class="toggle"><input type="checkbox" id="u-public" checked/><span>公开显示</span></label>
+          </div>
+        </div>
+        <div id="uploadProgress" class="progress-bar" hidden><div id="progressFill"></div></div>
+        <button id="submitUpload" class="action-btn">⬆ 上传并保存</button>
+        <p id="uploadMsg" class="status-msg"></p>
+      </section>
+
+      <!-- TAB: REVIEW -->
+      <section id="tab-review" class="tab-panel" hidden>
+        <h2 class="tab-title">审核访客投稿</h2>
+        <div class="filter-tabs">
+          <button class="ftab active" data-status="pending">待审核</button>
+          <button class="ftab" data-status="approved">已通过</button>
+          <button class="ftab" data-status="rejected">已拒绝</button>
+        </div>
+        <div id="reviewList" class="review-list"><p class="empty-hint">加载中…</p></div>
+      </section>
+
+      <!-- TAB: MY PHOTOS -->
+      <section id="tab-photos" class="tab-panel" hidden>
+        <h2 class="tab-title">照片库 <span id="photoCount" class="count-chip"></span></h2>
+        <div id="photosList" class="photos-list"><p class="empty-hint">加载中…</p></div>
+      </section>
+
+      <!-- TAB: NOTES -->
+      <section id="tab-notes" class="tab-panel" hidden>
+        <h2 class="tab-title">私密小纸条 <span id="unreadBadge" class="badge" hidden></span></h2>
+        <div id="notesList" class="notes-list"><p class="empty-hint">加载中…</p></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- REJECT MODAL -->
+  <div id="rejectModal" class="modal" hidden>
+    <div class="modal-box">
+      <h3>拒绝原因</h3>
+      <textarea id="rejectReason" rows="4" placeholder="请填写拒绝原因（将发送给投稿人）"></textarea>
+      <div class="modal-actions">
+        <button id="confirmReject" class="action-btn danger">确认拒绝</button>
+        <button id="cancelReject" class="modal-cancel">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="config.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
