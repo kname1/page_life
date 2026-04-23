@@ -55,8 +55,16 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
 function showPanel() {
   loginScreen.hidden = true;
   adminPanel.hidden  = false;
+  initDefaults();
   loadReview('pending');
   loadNotes();
+}
+
+function initDefaults() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  document.getElementById('u-date').value = `${year}-${month}`;
 }
 
 // ── Tabs ──────────────────────────────────────────────────────
@@ -117,6 +125,36 @@ function compressImage(file, maxWidth = 2400, quality = 0.88) {
     reader.readAsDataURL(file);
   });
 }
+// ── Auto Translation ──────────────────────────────────────────
+async function translateText(text, from, to) {
+  if (!text) return '';
+  try {
+    const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`);
+    const data = await res.json();
+    return data.responseData.translatedText || '';
+  } catch (e) {
+    console.error('Translation error:', e);
+    return '';
+  }
+}
+
+document.getElementById('u-title').addEventListener('blur', async () => {
+  const zh = document.getElementById('u-title').value.trim();
+  const enField = document.getElementById('u-titleEn');
+  if (zh && !enField.value.trim()) {
+    const translated = await translateText(zh, 'zh', 'en');
+    if (translated) enField.value = translated;
+  }
+});
+
+document.getElementById('u-titleEn').addEventListener('blur', async () => {
+  const en = document.getElementById('u-titleEn').value.trim();
+  const zhField = document.getElementById('u-title');
+  if (en && !zhField.value.trim()) {
+    const translated = await translateText(en, 'en', 'zh');
+    if (translated) zhField.value = translated;
+  }
+});
 
 document.getElementById('submitUpload').addEventListener('click', async () => {
   const title = document.getElementById('u-title').value.trim();
